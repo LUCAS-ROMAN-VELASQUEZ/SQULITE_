@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Button insertButton, deleteButton, listButton;
     private MovieDatabaseHelper dbHelper;
     private ArrayAdapter<String> adapter;
-    private List<String> movieList;
+    private List<String> futbolistasList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         listButton = findViewById(R.id.listButton);
 
         dbHelper = new MovieDatabaseHelper(this);
-        movieList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, movieList);
+        futbolistasList = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, futbolistasList);
         listView.setAdapter(adapter);
 
         insertButton.setOnClickListener(new View.OnClickListener() {
@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.clearDatabase(db);
 
         String[] Futbolistas = {"Leo Messi", "Rapinha", "Gavi", "Lamine Yamal", "Dani Guiza", "Ansu Fati"};
-        for (String movie : Futbolistas) {
+        for (String nombre : Futbolistas) {
             ContentValues values = new ContentValues();
-            values.put("title", movie);
+            values.put("nombre", nombre);
             db.insert("Futbolistas", null, values);
         }
         db.close();
@@ -76,17 +76,17 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.clearDatabase(db);
         db.close();
-        movieList.clear();
+        futbolistasList.clear();
         adapter.notifyDataSetChanged();
     }
 
     private void listFutbolistas() {
-        movieList.clear();
+        futbolistasList.clear();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT title FROM Futbolistas", null);
+        Cursor cursor = db.rawQuery("SELECT nombre FROM Futbolistas", null);
         if (cursor.moveToFirst()) {
             do {
-                movieList.add(cursor.getString(0));
+                futbolistasList.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
         cursor.close();
